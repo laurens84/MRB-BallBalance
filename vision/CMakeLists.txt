@@ -6,6 +6,10 @@ set(exe_name "vision")
 enable_testing()
 include(../../../flags.cmake)
 
+set(OpenCV_DIR "~/Documents/opencv/release")
+
+find_package(OpenCV REQUIRED PATHS "/home/laurens/Documents/opencv/")
+
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 
@@ -13,3 +17,4 @@ set(sources
     src/main.cpp)
 
 add_executable(${exe_name} ${sources})
+target_link_libraries(vision ${OpenCV_LIBS})
