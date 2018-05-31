@@ -22,5 +22,5 @@ int main() {
         hwlib::wait_us(1600);
     }
 
-    return 0;
+    return 0; // test
 }
