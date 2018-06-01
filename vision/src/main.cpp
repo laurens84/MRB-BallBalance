@@ -6,7 +6,8 @@
 int main()
 {
   cv::VideoCapture cap(0);
-
+  cap.set(cv::CAP_PROP_FRAME_WIDTH, 400);
+  cap.set(cv::CAP_PROP_FRAME_HEIGHT, 500);
   if (!cap.isOpened())
     return -1;
 
@@ -23,19 +24,18 @@ int main()
     cv::GaussianBlur(gray, gray, cv::Size(17, 17), 0);
 
     std::vector<cv::Vec3f> circles;
-    cv::HoughCircles(gray, circles, cv::HOUGH_GRADIENT, 1, gray.rows / 4, 100,
-                     100, 0, 0);
+    cv::HoughCircles(gray, circles, cv::HOUGH_GRADIENT, 1, gray.rows / 4, 100, 20, 8, 10);
 
     for (size_t i = 0; i < circles.size(); i++)
     {
       std::cout << b++ << " circle found.\n";
       cv::Point center(cvRound(circles[i][0]), cvRound(circles[i][1]));
       int radius = cvRound(circles[i][2]);
-      cv::circle(gray, center, 3, cv::Scalar(0, 255, 0), -1, 8, 0);
-      cv::circle(gray, center, radius, cv::Scalar(0, 0, 255), 3, 8, 0);
+      cv::circle(frame, center, 3, cv::Scalar(0, 255, 0), -1, 8, 0);
+      cv::circle(frame, center, radius, cv::Scalar(0, 0, 255), 3, 8, 0);
     }
 
-    cv::imshow("circles", gray);
+    cv::imshow("circles", frame);
     if (cv::waitKey(30) == 'c')
       break;
   }
