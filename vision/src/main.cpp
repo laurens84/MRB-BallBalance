@@ -1,8 +1,44 @@
+#include "opencv2/highgui/highgui.hpp"
+#include "opencv2/imgproc/imgproc.hpp"
 #include <iostream>
-#include <opencv2/core/core.hpp>
+#include <stdio.h>
 
-int main(int argc, char **argv) {
-	std::cout << "Hello world! " << CV_PI << '\n';
+int main()
+{
+  cv::VideoCapture cap(0);
 
-	return 0;
+  if (!cap.isOpened())
+    return -1;
+
+  int b = 0;
+  cv::namedWindow("Circles", cv::WINDOW_AUTOSIZE);
+
+  while (1)
+  {
+    cv::Mat frame, gray;
+
+    cap >> frame;
+
+    cv::cvtColor(frame, gray, cv::COLOR_BGR2GRAY);
+    cv::GaussianBlur(gray, gray, cv::Size(17, 17), 0);
+
+    std::vector<cv::Vec3f> circles;
+    cv::HoughCircles(gray, circles, cv::HOUGH_GRADIENT, 1, gray.rows / 4, 100,
+                     100, 0, 0);
+
+    for (size_t i = 0; i < circles.size(); i++)
+    {
+      std::cout << b++ << " circle found.\n";
+      cv::Point center(cvRound(circles[i][0]), cvRound(circles[i][1]));
+      int radius = cvRound(circles[i][2]);
+      cv::circle(gray, center, 3, cv::Scalar(0, 255, 0), -1, 8, 0);
+      cv::circle(gray, center, radius, cv::Scalar(0, 0, 255), 3, 8, 0);
+    }
+
+    cv::imshow("circles", gray);
+    if (cv::waitKey(30) == 'c')
+      break;
+  }
+
+  return 0;
 }
