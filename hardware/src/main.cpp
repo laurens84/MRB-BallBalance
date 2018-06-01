@@ -15,11 +15,11 @@ int main() {
         serv_1.set(0);
         serv_2.set(0);
         serv_3.set(0);
-        hwlib::wait_us(1600);
+        hwlib::wait_us(1700);
         serv_1.set(1);
         serv_2.set(1);
         serv_3.set(1);
-        hwlib::wait_us(1600);
+        hwlib::wait_us(1700);
     }
 
     return 0;
