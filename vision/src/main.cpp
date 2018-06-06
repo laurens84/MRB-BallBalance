@@ -1,5 +1,5 @@
 #include "circle_detector.hpp"
-#include "coordination.hpp"
+#include "coordinator.hpp"
 #include <stdio.h>
 
 int main() {

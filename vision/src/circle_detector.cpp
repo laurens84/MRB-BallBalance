@@ -33,11 +33,10 @@ const std::vector<cv::Point> &circle_detector::locate_circles() {
 
 void circle_detector::display_circles(const std::string &window_name) {
     if (points.size() > 0) {
+        std::cout << points.size() << "\n";
         for (uint8_t i = 0; i < points.size(); i++) {
             cv::circle(frame, points[i], 3, cv::Scalar(0, 255, 0), -1, 8, 0);
         };
-    } else {
-        std::cout << "No circles to draw.\n";
     }
     cv::imshow(window_name, frame);
 }
