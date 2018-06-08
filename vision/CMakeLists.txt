@@ -15,6 +15,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 set(sources
     src/circle_detector.cpp
+    src/coordinator.cpp
     src/main.cpp)
 
 add_executable(${exe_name} ${sources})
