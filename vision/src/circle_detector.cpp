@@ -10,35 +10,38 @@ Circle_detector::Circle_detector(const uint8_t &deviceNum, const uint16_t &width
 }
 
 void Circle_detector::init(Coordinator &cod, const cv::Size &blur_size, const int &min_radius, const int &max_radius) {
-    cv::Point red, blue, green;
+    if (!cod.get_has_servos()) {
+        cv::Point red, blue, green;
 
-    cap >> frame;
-    cv::Mat3b bgr_inv = ~frame;
-    cv::Mat3b hsv_inv;
-    cv::cvtColor(bgr_inv, hsv_inv, cv::COLOR_BGR2HSV); // Red
-    cv::cvtColor(frame, frame, cv::COLOR_BGR2HSV);     // Blue & green.
+        cap >> frame;
+        cv::Mat3b bgr_inv = ~frame;
+        cv::Mat3b hsv_inv;
+        cv::cvtColor(bgr_inv, hsv_inv, cv::COLOR_BGR2HSV); // Red
+        cv::cvtColor(frame, frame, cv::COLOR_BGR2HSV);     // Blue & green.
 
-    // Red
-    inRange(hsv_inv, cv::Scalar(80, 70, 50), cv::Scalar(100, 255, 255), mask);
-    cv::GaussianBlur(mask, mask, blur_size, 0);
-    cv::HoughCircles(mask, circles, cv::HOUGH_GRADIENT, 1, mask.rows / 8, 100, 20, min_radius, max_radius);
-    red = cv::Point(cvRound(circles[0][0]), cvRound(circles[0][1]));
+        // Red
+        inRange(hsv_inv, cv::Scalar(80, 70, 50), cv::Scalar(100, 255, 255), mask);
+        cv::GaussianBlur(mask, mask, blur_size, 0);
+        cv::HoughCircles(mask, circles, cv::HOUGH_GRADIENT, 1, mask.rows / 8, 100, 20, min_radius, max_radius);
+        red = cv::Point(cvRound(circles[0][0]), cvRound(circles[0][1]));
 
-    // Blue
-    inRange(frame, cv::Scalar(100, 120, 75), cv::Scalar(110, 255, 255), mask);
-    cv::GaussianBlur(mask, mask, blur_size, 0);
-    cv::HoughCircles(mask, circles, cv::HOUGH_GRADIENT, 1, mask.rows / 8, 100, 20, min_radius, max_radius);
-    blue = cv::Point(cvRound(circles[1][0]), cvRound(circles[1][1]));
+        // Blue
+        inRange(frame, cv::Scalar(100, 120, 75), cv::Scalar(110, 255, 255), mask);
+        cv::GaussianBlur(mask, mask, blur_size, 0);
+        cv::HoughCircles(mask, circles, cv::HOUGH_GRADIENT, 1, mask.rows / 8, 100, 20, min_radius, max_radius);
+        blue = cv::Point(cvRound(circles[1][0]), cvRound(circles[1][1]));
 
-    // Green
-    inRange(frame, cv::Scalar(60, 120, 75), cv::Scalar(90, 255, 255), mask);
-    cv::GaussianBlur(mask, mask, blur_size, 0);
-    cv::HoughCircles(mask, circles, cv::HOUGH_GRADIENT, 1, mask.rows / 8, 100, 20, min_radius, max_radius);
-    green = cv::Point(cvRound(circles[2][0]), cvRound(circles[2][1]));
+        // Green
+        inRange(frame, cv::Scalar(60, 120, 75), cv::Scalar(90, 255, 255), mask);
+        cv::GaussianBlur(mask, mask, blur_size, 0);
+        cv::HoughCircles(mask, circles, cv::HOUGH_GRADIENT, 1, mask.rows / 8, 100, 20, min_radius, max_radius);
+        green = cv::Point(cvRound(circles[2][0]), cvRound(circles[2][1]));
 
-    std::cout << "red: " << red << "\n blue: " << blue << "\n green: " << green << std::endl;
+        std::cout << "red: " << red << "\n blue: " << blue << "\n green: " << green << std::endl;
 
-    cod.setServos(new Servo('a', red), new Servo('b', blue), new Servo('c', green));
+        cod.setServos(std::unique_ptr<Servo>(new Servo('a', red)), std::unique_ptr<Servo>(new Servo('b', blue)),
+                      std::unique_ptr<Servo>(new Servo('c', green)));
+    }
 }
 
 void Circle_detector::detect_circles(const cv::Size &blur_size, const int &min_radius, const int &max_radius) {

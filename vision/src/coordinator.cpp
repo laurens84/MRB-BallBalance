@@ -1,10 +1,10 @@
 #include "coordinator.hpp"
 
-void Coordinator::setServos(Servo *servo_a, Servo *servo_b, Servo *servo_c) {
+void Coordinator::setServos(std::unique_ptr<Servo> servo_a, std::unique_ptr<Servo> servo_b, std::unique_ptr<Servo> servo_c) {
     if (!has_servos) {
-        servos[0] = servo_a;
-        servos[1] = servo_b;
-        servos[2] = servo_c;
+        servos[0] = std::move(servo_a);
+        servos[1] = std::move(servo_b);
+        servos[2] = std::move(servo_c);
         has_servos = true;
     }
 }

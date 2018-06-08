@@ -5,6 +5,9 @@
 #include "opencv2/highgui/highgui.hpp"
 #include "opencv2/imgproc/imgproc.hpp"
 #include <iostream>
+#include <memory>
+
+class Coordinator;
 
 struct Servo {
     uint8_t color_code;
