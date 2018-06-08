@@ -16,9 +16,7 @@ class circle_detector {
   public:
     circle_detector(const uint8_t &deviceNum, const uint16_t &width, const uint16_t &height);
 
-    void init();
-
-    void detect_circles();
+    void detect_circles(const cv::Size &blur_size, const int &min_radius, const int &max_radius);
 
     const std::vector<cv::Point> &locate_circles();
 
