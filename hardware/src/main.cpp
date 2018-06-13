@@ -1,26 +1,33 @@
-#include "wrap-hwlib.hpp"
+#include <Servo.h>
 
-int main() {
-    WDT->WDT_MR = WDT_MR_WDDIS;
+Servo servo1, servo2, servo3;
 
-    hwlib::wait_ms(1000);
+int val;
 
-    namespace target = hwlib::target;
+void setup() {
+    servo1.attach(2);
+    servo2.attach(3);
+    servo3.attach(4);
+    Serial.begin(115200);
+}
 
-    auto serv_1 = target::pin_out(target::pins::d2);
-    auto serv_2 = target::pin_out(target::pins::d3);
-    auto serv_3 = target::pin_out(target::pins::d4);
-
-    for (;;) {
-        serv_1.set(0);
-        serv_2.set(0);
-        serv_3.set(0);
-        hwlib::wait_us(1700);
-        serv_1.set(1);
-        serv_2.set(1);
-        serv_3.set(1);
-        hwlib::wait_us(1700);
+void loop() {
+    while (Serial.available()) {
+        char servoID = Serial.read();
+        val = Serial.parseInt();
+        if (servoID == 'a')
+            servo1.write(val);
+        else if (servoID == 'b')
+            servo2.write(val);
+        else if (servoID == 'c')
+            servo3.write(val);
+        else if (servoID == 'A') {
+            servo1.write(val);
+            servo2.write(val);
+            servo3.write(val);
+        }
+        delay(5);
+        while (Serial.available() > 0)
+            Serial.read();
     }
-
-    return 0;
 }
