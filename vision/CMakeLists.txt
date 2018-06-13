@@ -15,6 +15,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 set(sources
     src/circle_detector.cpp
+    src/UART.cpp
     src/coordinator.cpp
     src/display.cpp
     src/main.cpp)
