@@ -1,25 +1,27 @@
 #include "circle_detector.hpp"
 #include "coordinator.hpp"
+#include "display.hpp"
 #include <stdio.h>
 
 int main() {
 
     // Circle detection.
-    circle_detector circles(1, 500, 400);
-    cv::namedWindow("Circles", cv::WINDOW_AUTOSIZE);
+    display window("Circles");
+    Circle_detector circles(1, 500, 400);
+    Coordinator cod;
 
     // Detect motor position.
-    // 0, 10 for motor circles.
-    circles.detect_circles(cv::Size(17, 17), 0, 10);
+    circles.init(cod, cv::Size(17, 17), 0, 10);
     std::vector<cv::Point> servo_locations = circles.locate_circles();
 
     // Coordinator class.
     std::cout << servo_locations << std::endl;
 
     while (1) {
-        circles.detect_circles(cv::Size(17, 17), 20, 30);
+        circles.detect_circles(cv::Size(17, 17), 0, 40);
         circles.locate_circles();
-        circles.display_circles("Circles");
+        window.display_circles(circles.getFrame(), circles.getCirclePoints());
+
         if (cv::waitKey(30) == 'c')
             break;
     }

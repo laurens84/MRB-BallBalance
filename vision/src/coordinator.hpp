@@ -1,21 +1,28 @@
 #ifndef COORDINATOR_HPP
 #define COORDINATOR_HPP
 
+#include "circle_detector.hpp"
 #include "opencv2/highgui/highgui.hpp"
 #include "opencv2/imgproc/imgproc.hpp"
 #include <iostream>
+#include <memory>
 
-// class Servo;
+struct Servo;
 
-class coordinator {
+class Coordinator {
   private:
-    // Servo servos[3];
+    bool has_all_servos;
+    std::array<std::unique_ptr<Servo>, 3> servos;
 
   public:
-    /*
-      coordination(const Servo &s0, const Servo &s1, const Servo &s2) : servos{s0, s1, s2} {
-      }
-  */
+    Coordinator() : has_all_servos{false} {
+    }
+
+    void setServos(std::unique_ptr<Servo> servo_a, std::unique_ptr<Servo> servo_b, std::unique_ptr<Servo> servo_c);
+
+    bool has_servos() {
+        return has_all_servos;
+    };
 };
 
 #endif // COORDINATOR_HPP
