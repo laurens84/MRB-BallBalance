@@ -1,12 +1,13 @@
 #include "circle_detector.hpp"
 #include "coordinator.hpp"
+#include "display.hpp"
 #include <stdio.h>
 
 int main() {
     // Circle detection.
-    Circle_detector circles(1, 500, 400);
+    display window("Circles");
+    Circle_detector circles(0, 500, 400);
     Coordinator cod;
-    cv::namedWindow("Circles", cv::WINDOW_AUTOSIZE);
 
     // Detect motor position.
     circles.init(cod, cv::Size(17, 17), 0, 10);
@@ -16,9 +17,9 @@ int main() {
     std::cout << servo_locations << std::endl;
 
     while (1) {
-        circles.init(cod, cv::Size(17, 17), 0, 10);
+        circles.detect_circles(cv::Size(17, 17), 0, 40);
         circles.locate_circles();
-        circles.display_circles("Circles");
+        window.display_circles(circles.getMask(), circles.getCirclePoints());
         if (cv::waitKey(30) == 'c')
             break;
     }

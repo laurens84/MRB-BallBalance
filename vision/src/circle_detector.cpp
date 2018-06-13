@@ -71,11 +71,14 @@ const std::vector<cv::Point> &Circle_detector::locate_circles() {
     return points;
 }
 
-void Circle_detector::display_circles(const std::string &window_name) {
-    if (points.size() > 0) {
-        for (uint8_t i = 0; i < points.size(); i++) {
-            cv::circle(mask, points[i], 3, cv::Scalar(0, 255, 0), -1, 8, 0);
-        };
-    }
-    cv::imshow(window_name, mask);
+std::vector<cv::Vec3f> &Circle_detector::getCircles() {
+    return circles;
+}
+
+std::vector<cv::Point> &Circle_detector::getCirclePoints() {
+    return points;
+}
+
+cv::Mat &Circle_detector::getMask() {
+    return frame;
 }
