@@ -20,6 +20,7 @@ void display::display_circles(cv::Mat &frame, std::vector<cv::Point> &points) co
             cv::circle(frame, points[i], 3, cv::Scalar(0, 255, 0), -1, 8, 0);
         };
     }
+
     cv::imshow(window_name, frame);
 }
 

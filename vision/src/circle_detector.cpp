@@ -11,7 +11,7 @@ Circle_detector::Circle_detector(const uint8_t &deviceNum, const uint16_t &width
 }
 
 void Circle_detector::init(Coordinator &cod, const cv::Size &blur_size, const int &min_radius, const int &max_radius) {
-    if (!cod.get_has_servos()) {
+    if (!cod.has_servos()) {
         cv::Point red, blue, green;
 
         cap >> frame;
@@ -79,6 +79,6 @@ std::vector<cv::Point> &Circle_detector::getCirclePoints() {
     return points;
 }
 
-cv::Mat &Circle_detector::getMask() {
+cv::Mat &Circle_detector::getFrame() {
     return frame;
 }

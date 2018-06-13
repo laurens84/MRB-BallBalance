@@ -11,17 +11,17 @@ struct Servo;
 
 class Coordinator {
   private:
-    bool has_servos;
+    bool has_all_servos;
     std::array<std::unique_ptr<Servo>, 3> servos;
 
   public:
-    Coordinator() : has_servos{false} {
+    Coordinator() : has_all_servos{false} {
     }
 
     void setServos(std::unique_ptr<Servo> servo_a, std::unique_ptr<Servo> servo_b, std::unique_ptr<Servo> servo_c);
 
-    bool get_has_servos() {
-        return has_servos;
+    bool has_servos() {
+        return has_all_servos;
     };
 };
 

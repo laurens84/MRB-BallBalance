@@ -4,9 +4,10 @@
 #include <stdio.h>
 
 int main() {
+
     // Circle detection.
     display window("Circles");
-    Circle_detector circles(0, 500, 400);
+    Circle_detector circles(1, 500, 400);
     Coordinator cod;
 
     // Detect motor position.
@@ -19,7 +20,8 @@ int main() {
     while (1) {
         circles.detect_circles(cv::Size(17, 17), 0, 40);
         circles.locate_circles();
-        window.display_circles(circles.getMask(), circles.getCirclePoints());
+        window.display_circles(circles.getFrame(), circles.getCirclePoints());
+
         if (cv::waitKey(30) == 'c')
             break;
     }

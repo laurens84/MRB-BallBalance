@@ -38,6 +38,6 @@ class Circle_detector {
 
     std::vector<cv::Vec3f> &getCircles();
     std::vector<cv::Point> &getCirclePoints();
-    cv::Mat &getMask();
+    cv::Mat &getFrame();
 };
 #endif // CIRCLE_DETECTOR_HPP
