@@ -1,4 +1,5 @@
 #include "circle_detector.hpp"
+#include <math.h>
 #include <stdio.h>
 
 Circle_detector::Circle_detector(const uint8_t &deviceNum, const uint16_t &width, const uint16_t &height) : cap(deviceNum) {
@@ -11,7 +12,7 @@ Circle_detector::Circle_detector(const uint8_t &deviceNum, const uint16_t &width
 }
 
 void Circle_detector::init(Coordinator &cod, const cv::Size &blur_size, const int &min_radius, const int &max_radius) {
-    if (!cod.has_servos()) {
+    while (!cod.has_servos()) {
         cv::Point red, blue, green;
 
         cap >> frame;
@@ -28,23 +29,34 @@ void Circle_detector::init(Coordinator &cod, const cv::Size &blur_size, const in
             red = cv::Point(cvRound(circles[0][0]), cvRound(circles[0][1]));
 
         // Blue
+        circles.clear();
         inRange(frame, cv::Scalar(100, 120, 75), cv::Scalar(110, 255, 255), mask);
         cv::GaussianBlur(mask, mask, blur_size, 0);
         cv::HoughCircles(mask, circles, cv::HOUGH_GRADIENT, 1, mask.rows / 8, 100, 20, min_radius, max_radius);
-        if (circles.size() > 1)
-            blue = cv::Point(cvRound(circles[1][0]), cvRound(circles[1][1]));
+        if (circles.size() > 0)
+            blue = cv::Point(cvRound(circles[0][0]), cvRound(circles[0][1]));
 
         // Green
+        circles.clear();
         inRange(frame, cv::Scalar(60, 120, 75), cv::Scalar(90, 255, 255), mask);
         cv::GaussianBlur(mask, mask, blur_size, 0);
         cv::HoughCircles(mask, circles, cv::HOUGH_GRADIENT, 1, mask.rows / 8, 100, 20, min_radius, max_radius);
-        if (circles.size() > 2)
-            green = cv::Point(cvRound(circles[2][0]), cvRound(circles[2][1]));
+        if (circles.size() > 0)
+            green = cv::Point(cvRound(circles[0][0]), cvRound(circles[0][1]));
 
-        std::cout << "red: " << red << "\n blue: " << blue << "\n green: " << green << std::endl;
+        if ((red.x != 0 && red.y != 0) && (blue.x != 0 && blue.y != 0) && (green.x != 0 && green.y != 0)) {
+            double side_1 = sqrt(pow(red.x - blue.x, 2) + pow(red.y - blue.y, 2));
+            double side_2 = sqrt(pow(red.x - green.x, 2) + pow(red.y - green.y, 2));
+            double side_3 = sqrt(pow(blue.x - green.x, 2) + pow(blue.y - green.y, 2));
+            double side_avg = (side_1 + side_2 + side_3) / 3;
 
-        cod.setServos(std::unique_ptr<Servo>(new Servo('a', red)), std::unique_ptr<Servo>(new Servo('b', blue)),
-                      std::unique_ptr<Servo>(new Servo('c', green)));
+            if ((side_1 - side_avg > -10) && (side_1 - side_avg < 10)) {
+                // std::cout << "red: " << red << "\nblue: " << blue << "\ngreen: " << green << "\n\n";
+                std::cout << "rb: " << side_1 << " rg: " << side_2 << " bg: " << side_3 << "\n";
+                cod.setServos(std::unique_ptr<Servo>(new Servo('a', red)), std::unique_ptr<Servo>(new Servo('b', blue)),
+                              std::unique_ptr<Servo>(new Servo('c', green)));
+            }
+        }
     }
 }
 

@@ -7,7 +7,7 @@ int main() {
 
     // Circle detection.
     display window("Circles");
-    Circle_detector circles(1, 500, 400);
+    Circle_detector circles(0, 500, 400);
     Coordinator cod;
 
     // Detect motor position.
