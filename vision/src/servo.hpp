@@ -6,7 +6,7 @@
 class servo {
   private:
     UART &serial;
-    uint8_t id;
+    uint8_t id, motpos;
     cv::Point position;
 
   public:
@@ -15,6 +15,8 @@ class servo {
     void write(uint8_t degees);
 
     void int_to_str(uint8_t num, char *buffer);
+
+    uint8_t &get_motor_position();
 };
 
 #endif

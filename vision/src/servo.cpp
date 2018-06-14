@@ -10,6 +10,7 @@ void servo::write(uint8_t degrees) {
     this->int_to_str(degrees, data);
 
     serial.send(data);
+    motpos = degrees;
 }
 
 void servo::int_to_str(uint8_t num, char *buffer) {
@@ -17,4 +18,8 @@ void servo::int_to_str(uint8_t num, char *buffer) {
         *(buffer + i) = (num % 10) + 48;
         num /= 10;
     }
+}
+
+uint8_t &servo::get_motor_position() {
+    return motpos;
 }
