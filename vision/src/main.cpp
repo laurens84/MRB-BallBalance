@@ -1,5 +1,4 @@
 #include "circle_detector.hpp"
-#include "coordinator.hpp"
 #include "display.hpp"
 #include <stdio.h>
 
@@ -8,14 +7,19 @@ int main() {
     // Circle detection.
     display window("Circles");
     Circle_detector circles(0, 500, 400);
-    Coordinator cod;
 
     // Detect motor position.
-    circles.init(cod, cv::Size(17, 17), 0, 10);
-    std::vector<cv::Point> servo_locations = circles.locate_circles();
+    auto servo_positions = circles.init(cv::Size(17, 17), 0, 10);
 
-    // Coordinator class.
-    std::cout << servo_locations << std::endl;
+    for (uint8_t i = 0; i < servo_positions.size(); ++i) {
+        std::cout << servo_positions[i] << std::endl;
+    }
+
+    // UART
+    // Servos aanmaken met UART.
+
+    // Coordinator cod;
+    // Add servos& to coordinator array.
 
     while (1) {
         circles.detect_circles(cv::Size(17, 17), 0, 40);

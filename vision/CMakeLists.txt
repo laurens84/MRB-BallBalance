@@ -17,7 +17,6 @@ set(sources
     src/circle_detector.cpp
     src/UART.cpp
     src/servo.cpp
-    src/coordinator.cpp
     src/display.cpp
     src/main.cpp)
 

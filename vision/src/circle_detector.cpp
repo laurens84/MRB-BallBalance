@@ -2,7 +2,8 @@
 #include <math.h>
 #include <stdio.h>
 
-Circle_detector::Circle_detector(const uint8_t &deviceNum, const uint16_t &width, const uint16_t &height) : cap(deviceNum) {
+Circle_detector::Circle_detector(const uint8_t &deviceNum, const uint16_t &width, const uint16_t &height)
+    : cap{deviceNum}, triangle_detected{false} {
     if (cap.isOpened()) {
         cap.set(cv::CAP_PROP_FRAME_WIDTH, width);
         cap.set(cv::CAP_PROP_FRAME_HEIGHT, height);
@@ -11,8 +12,8 @@ Circle_detector::Circle_detector(const uint8_t &deviceNum, const uint16_t &width
     }
 }
 
-void Circle_detector::init(Coordinator &cod, const cv::Size &blur_size, const int &min_radius, const int &max_radius) {
-    while (!cod.has_servos()) {
+std::array<cv::Point, 3> Circle_detector::init(const cv::Size &blur_size, const int &min_radius, const int &max_radius) {
+    while (!triangle_detected) {
         cv::Point red, blue, green;
 
         cap >> frame;
@@ -51,13 +52,14 @@ void Circle_detector::init(Coordinator &cod, const cv::Size &blur_size, const in
             double side_avg = (side_1 + side_2 + side_3) / 3;
 
             if ((side_1 - side_avg > -10) && (side_1 - side_avg < 10)) {
+                triangle_detected = true;
                 // std::cout << "red: " << red << "\nblue: " << blue << "\ngreen: " << green << "\n\n";
                 std::cout << "rb: " << side_1 << " rg: " << side_2 << " bg: " << side_3 << "\n";
-                cod.setServos(std::unique_ptr<Servo>(new Servo('a', red)), std::unique_ptr<Servo>(new Servo('b', blue)),
-                              std::unique_ptr<Servo>(new Servo('c', green)));
+                return {red, blue, green};
             }
         }
     }
+    return {cv::Point(0, 0)};
 }
 
 void Circle_detector::detect_circles(const cv::Size &blur_size, const int &min_radius, const int &max_radius) {
