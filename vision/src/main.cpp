@@ -1,25 +1,29 @@
+#include "UART.hpp"
 #include "circle_detector.hpp"
+#include "coordinator.hpp"
 #include "display.hpp"
+#include "servo.hpp"
 #include <stdio.h>
 
 int main() {
 
     // Circle detection.
     display window("Circles");
-    Circle_detector circles(0, 500, 400);
+    Circle_detector circles(1, 500, 400);
 
     // Detect motor position.
     auto servo_positions = circles.init(cv::Size(17, 17), 0, 10);
 
-    for (uint8_t i = 0; i < servo_positions.size(); ++i) {
-        std::cout << servo_positions[i] << std::endl;
-    }
+    UART serial("/dev/ttyUSB0");
+    serial.connect();
 
-    // UART
-    // Servos aanmaken met UART.
+    Servo servo1(serial, 'a', servo_positions[0]);
+    Servo servo2(serial, 'b', servo_positions[1]);
+    Servo servo3(serial, 'c', servo_positions[2]);
 
-    // Coordinator cod;
-    // Add servos& to coordinator array.
+    Coordinator cod(&servo1, &servo2, &servo3);
+
+    std::cout << cod.get_servo_location('a') << "\n";
 
     while (1) {
         circles.detect_circles(cv::Size(17, 17), 0, 40);

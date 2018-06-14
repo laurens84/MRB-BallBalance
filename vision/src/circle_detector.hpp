@@ -13,7 +13,7 @@ class Circle_detector {
 
     std::vector<cv::Point> points;
 
-    cv::Mat mask;
+    cv::Mat mask, mask1, mask2;
 
     bool triangle_detected;
 
