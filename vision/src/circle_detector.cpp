@@ -1,6 +1,7 @@
 #include "circle_detector.hpp"
 #include <math.h>
 #include <stdio.h>
+#include <unistd.h>
 
 Circle_detector::Circle_detector(const uint8_t &deviceNum, const uint16_t &width, const uint16_t &height)
     : cap{deviceNum}, triangle_detected{false} {
@@ -14,9 +15,11 @@ Circle_detector::Circle_detector(const uint8_t &deviceNum, const uint16_t &width
 
 std::array<cv::Point, 3> Circle_detector::init(const cv::Size &blur_size, const int &min_radius, const int &max_radius) {
     while (!triangle_detected) {
-        cv::Point red, blue, green;
+        cv::Point red(0, 0), blue(0, 0), green(0, 0);
 
         cap >> frame;
+        imshow("Circles", frame);
+
         cv::Mat3b bgr_inv = ~frame;
         cv::Mat3b hsv_inv;
         cv::cvtColor(bgr_inv, hsv_inv, cv::COLOR_BGR2HSV); // Red
@@ -58,7 +61,10 @@ std::array<cv::Point, 3> Circle_detector::init(const cv::Size &blur_size, const 
                 return {red, blue, green};
             }
         }
+
+        cv::waitKey(30);
     }
+
     return {cv::Point(0, 0)};
 }
 
