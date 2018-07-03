@@ -26,8 +26,8 @@ class Circle_detector {
 
     const std::vector<cv::Point> &locate_circles();
 
-    std::vector<cv::Vec3f> &getCircles();
-    std::vector<cv::Point> &getCirclePoints();
-    cv::Mat &getFrame();
+    std::vector<cv::Vec3f> &get_circles();
+    std::vector<cv::Point> &get_circle_points();
+    cv::Mat &get_frame();
 };
 #endif // CIRCLE_DETECTOR_HPP

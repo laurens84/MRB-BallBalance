@@ -28,10 +28,11 @@ int main() {
     while (1) {
         circles.detect_circles(cv::Size(17, 17), 0, 40);
         circles.locate_circles();
-        window.display_circles(circles.getFrame(), circles.getCirclePoints());
+        window.display_circles(circles.get_frame(), circles.get_circle_points());
 
-        if (cv::waitKey(30) == 'c')
+        if (cv::waitKey(30) == 'c') {
             break;
+        }
     }
 
     return 0;

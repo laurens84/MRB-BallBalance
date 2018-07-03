@@ -6,5 +6,6 @@ cv::Point &Coordinator::get_servo_location(const uint8_t &id) {
             return i->get_position();
         }
     }
+
     return servos[0]->get_position(); // slecht
 }
