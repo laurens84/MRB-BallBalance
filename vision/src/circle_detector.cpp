@@ -62,7 +62,9 @@ std::array<cv::Point, 3> Circle_detector::init(const cv::Size &blur_size, const 
             }
         }
 
-        cv::waitKey(30);
+        if (cv::waitKey(30) == 'c') {
+            break;
+        }
     }
 
     return {cv::Point(0, 0)};
