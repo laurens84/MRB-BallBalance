@@ -91,14 +91,14 @@ const std::vector<cv::Point> &Circle_detector::locate_circles() {
     return points;
 }
 
-std::vector<cv::Vec3f> &Circle_detector::getCircles() {
+std::vector<cv::Vec3f> &Circle_detector::get_circles() {
     return circles;
 }
 
-std::vector<cv::Point> &Circle_detector::getCirclePoints() {
+std::vector<cv::Point> &Circle_detector::get_circle_points() {
     return points;
 }
 
-cv::Mat &Circle_detector::getFrame() {
+cv::Mat &Circle_detector::get_frame() {
     return frame;
 }
