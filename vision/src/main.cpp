@@ -9,10 +9,15 @@ int main() {
 
     // Circle detection.
     display window("Circles");
-    Circle_detector circles(1, 500, 400);
+    Circle_detector circles(0, 300, 200);
 
     // Detect motor position.
     auto servo_positions = circles.init(cv::Size(17, 17), 0, 10);
+
+    if (servo_positions[0] == cv::Point(0, 0)) {
+        std::cout << "Appels\n";
+        return 0;
+    }
 
     UART serial("/dev/ttyUSB0");
     serial.connect();

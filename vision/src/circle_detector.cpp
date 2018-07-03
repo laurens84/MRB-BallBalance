@@ -31,6 +31,7 @@ std::array<cv::Point, 3> Circle_detector::init(const cv::Size &blur_size, const 
         cv::HoughCircles(mask, circles, cv::HOUGH_GRADIENT, 1, mask.rows / 8, 100, 20, min_radius, max_radius);
         if (circles.size() > 0)
             red = cv::Point(cvRound(circles[0][0]), cvRound(circles[0][1]));
+        std::cout << "Red: " << red << '\n';
 
         // Blue
         circles.clear();
@@ -39,6 +40,7 @@ std::array<cv::Point, 3> Circle_detector::init(const cv::Size &blur_size, const 
         cv::HoughCircles(mask, circles, cv::HOUGH_GRADIENT, 1, mask.rows / 8, 100, 20, min_radius, max_radius);
         if (circles.size() > 0)
             blue = cv::Point(cvRound(circles[0][0]), cvRound(circles[0][1]));
+        std::cout << "Blue: " << blue << '\n';
 
         // Green
         circles.clear();
@@ -47,6 +49,7 @@ std::array<cv::Point, 3> Circle_detector::init(const cv::Size &blur_size, const 
         cv::HoughCircles(mask, circles, cv::HOUGH_GRADIENT, 1, mask.rows / 8, 100, 20, min_radius, max_radius);
         if (circles.size() > 0)
             green = cv::Point(cvRound(circles[0][0]), cvRound(circles[0][1]));
+        std::cout << "Green: " << green << '\n';
 
         if ((red.x != 0 && red.y != 0) && (blue.x != 0 && blue.y != 0) && (green.x != 0 && green.y != 0)) {
             double side_1 = sqrt(pow(red.x - blue.x, 2) + pow(red.y - blue.y, 2));
