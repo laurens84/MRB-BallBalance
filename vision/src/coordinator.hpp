@@ -12,7 +12,7 @@ class Coordinator {
     Coordinator(Servo *servo_a, Servo *servo_b, Servo *servo_c) : servos{servo_a, servo_b, servo_c} {
     }
 
-    cv::Point &get_servo_location(const uint8_t &id);
+    cv::Point *get_servo_location(const uint8_t &id);
 };
 
 #endif // COORDINATOR_HPP
