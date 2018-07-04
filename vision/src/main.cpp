@@ -9,7 +9,7 @@ int main() {
 
     // Circle detection.
     display window("Circles");
-    Circle_detector circles(0, 400, 400);
+    Circle_detector circles(0, 800, 800);
 
     // Detect motor position.
     auto servo_positions = circles.init(cv::Size(17, 17), 0, 10);
@@ -25,6 +25,15 @@ int main() {
     Servo servo1(serial, 'a', servo_positions[0]);
     Servo servo2(serial, 'b', servo_positions[1]);
     Servo servo3(serial, 'c', servo_positions[2]);
+
+    cv::Point middle = (1.f / 3.f) * (servo1.get_position() + servo2.get_position() + servo3.get_position());
+    std::cout << middle << '\n';
+
+    sleep(5);
+
+    servo1.write(80);
+    servo2.write(80);
+    servo3.write(80);
 
     Coordinator cod(&servo1, &servo2, &servo3);
 
