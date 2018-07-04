@@ -8,15 +8,16 @@
 class display {
   private:
     std::string window_name;
-    cv::Point mouse_pos;
+    cv::Point set_point;
 
-    static void mouseHandler(int evt, int x, int y, int flags, void *param);
+    static void mouse_handler(int evt, int x, int y, int flags, void *param);
 
   public:
     display(const std::string &window_name);
 
     void display_circles(cv::Mat &frame, std::vector<cv::Point> &points) const;
 
-    cv::Point &getMousePos();
+    cv::Point &get_mouse_pos();
+    void set_mouse_pos(const cv::Point &mouse_pos);
 };
 #endif // DISPLAY_HPP
