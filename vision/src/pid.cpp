@@ -13,6 +13,8 @@ class PIDImpl {
     ~PIDImpl();
     double calculate(double setpoint, double pv);
 
+    double calculate(double error);
+
   private:
     double _dt;
     double _max;
@@ -30,6 +32,10 @@ PID::PID(double dt, double max, double min, double Kp, double Kd, double Ki) {
 double PID::calculate(double setpoint, double pv) {
     return pimpl->calculate(setpoint, pv);
 }
+double PID::calculate(double error) {
+    return pimpl->calculate(error);
+}
+
 PID::~PID() {
     delete pimpl;
 }
@@ -71,7 +77,37 @@ double PIDImpl::calculate(double setpoint, double pv) {
 
     return output;
 }
+double PIDImpl::calculate(double error) {
 
+    // Proportional term
+    double Pout = _Kp * error;
+
+    // Integral term
+    _integral += error * _dt;
+    double Iout = _Ki * _integral;
+
+    // Derivative term
+    double derivative = (error - _pre_error) / _dt;
+    double Dout = _Kd * derivative;
+
+    // Calculate total output
+    double output = Pout + Iout + Dout;
+
+    output = (-output) + ((_max + _min) / 2);
+
+    // Save error to previous error
+    // Restrict to max/min
+    if (output > _max)
+        output = _max;
+    else if (output < _min)
+        output = _min;
+
+    _pre_error = error;
+
+    std::cout << "Output: " << output << '\n';
+
+    return output;
+}
 PIDImpl::~PIDImpl() {
 }
 
