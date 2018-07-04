@@ -18,7 +18,6 @@ set(sources
     src/UART.cpp
     src/servo.cpp
     src/display.cpp
-    src/coordinator.cpp
     src/main.cpp)
 
 add_executable(${exe_name} ${sources})

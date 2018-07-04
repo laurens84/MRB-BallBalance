@@ -26,7 +26,7 @@ std::array<cv::Point, 3> Circle_detector::init(const cv::Size &blur_size, const 
         cv::cvtColor(frame, frame, cv::COLOR_BGR2HSV);     // Blue & green.
 
         // Red
-        inRange(hsv_inv, cv::Scalar(80, 70, 50), cv::Scalar(100, 255, 255), mask);
+        inRange(hsv_inv, cv::Scalar(80, 70, 50), cv::Scalar(100, 255, 220), mask);
         cv::GaussianBlur(mask, mask, blur_size, 0);
         cv::HoughCircles(mask, circles, cv::HOUGH_GRADIENT, 1, mask.rows / 8, 100, 20, min_radius, max_radius);
         if (circles.size() > 0)
@@ -35,7 +35,7 @@ std::array<cv::Point, 3> Circle_detector::init(const cv::Size &blur_size, const 
 
         // Blue
         circles.clear();
-        inRange(frame, cv::Scalar(100, 120, 75), cv::Scalar(110, 255, 255), mask);
+        inRange(frame, cv::Scalar(100, 70, 75), cv::Scalar(110, 255, 220), mask);
         cv::GaussianBlur(mask, mask, blur_size, 0);
         cv::HoughCircles(mask, circles, cv::HOUGH_GRADIENT, 1, mask.rows / 8, 100, 20, min_radius, max_radius);
         if (circles.size() > 0)
@@ -44,7 +44,7 @@ std::array<cv::Point, 3> Circle_detector::init(const cv::Size &blur_size, const 
 
         // Green
         circles.clear();
-        inRange(frame, cv::Scalar(60, 120, 75), cv::Scalar(90, 255, 255), mask);
+        inRange(frame, cv::Scalar(60, 70, 75), cv::Scalar(90, 255, 220), mask);
         cv::GaussianBlur(mask, mask, blur_size, 0);
         cv::HoughCircles(mask, circles, cv::HOUGH_GRADIENT, 1, mask.rows / 8, 100, 20, min_radius, max_radius);
         if (circles.size() > 0)

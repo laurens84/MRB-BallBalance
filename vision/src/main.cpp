@@ -26,16 +26,15 @@ int main() {
     Servo servo2(serial, 'b', servo_positions[1]);
     Servo servo3(serial, 'c', servo_positions[2]);
 
-    cv::Point middle = (1.f / 3.f) * (servo1.get_position() + servo2.get_position() + servo3.get_position());
-    std::cout << middle << '\n';
+    sleep(2);
 
-    sleep(5);
-
-    servo1.write(80);
+    servo1.write(80);    
+    usleep(10000);
     servo2.write(80);
+    usleep(10000);
     servo3.write(80);
 
-    Coordinator cod(&servo1, &servo2, &servo3);
+    Coordinator<3> cod(&servo1, &servo2, &servo3);
 
     std::cout << *cod.get_servo_location('a') << "\n";
 
