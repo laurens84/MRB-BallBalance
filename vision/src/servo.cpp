@@ -4,11 +4,12 @@ Servo::Servo(UART &serial, const uint8_t &id, const cv::Point &position) : seria
 }
 
 void Servo::write(uint8_t degrees) {
-    char data[4];
+    char data[5];
     data[0] = id;
 
     this->int_to_str(degrees, data);
 
+    data[4] = 'n';
     serial.send(data);
     motpos = degrees;
 }

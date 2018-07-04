@@ -3,17 +3,22 @@
 UART::UART(const std::string &device) : device{device} {
     tcgetattr(fd, &serial_port_settings);
 
-    cfsetispeed(&serial_port_settings, B115200);   /* Set Read  Speed as 9600                       */
-    cfsetospeed(&serial_port_settings, B115200);   /* Set Write Speed as 9600                       */
+    cfsetispeed(&serial_port_settings, B115200);   /* Set Read  Speed as 115200                       */
+    cfsetospeed(&serial_port_settings, B115200);   /* Set Write Speed as 115200                       */
     tcsetattr(fd, TCSANOW, &serial_port_settings); // Set all atrributes.
 }
 
 int UART::connect() {
     fd = open(device.c_str(), O_RDWR | O_NOCTTY);
-    if (fd == -1)
+    if (fd == -1) {
+        std::cout << "UART connection failed.\n";
         return -1; // Connect failed.
-    else
+    }
+
+    else {
+        std::cout << "UART connection success.\n";
         return 1; // Connect successfull.
+    }
 }
 
 void UART::disconnect() {
@@ -30,5 +35,6 @@ void UART::receive() {
 }
 
 int UART::send(const char *write_buffer) {
+    // std::cout << write_buffer << '\n';
     return write(fd, write_buffer, sizeof(write_buffer));
 }
