@@ -13,15 +13,28 @@ class Coordinator {
     Coordinator(Servo *servo_a, Servo *servo_b, Servo *servo_c) : servos{servo_a, servo_b, servo_c} {
     }
 
-    double pythagoras(const cv::Point &a, const cv::Point &b) {
-        return sqrt(pow(a.x - b.x, 2) + pow(a.y - b.y, 2));
+    // double get_length_diff(const cv::Point &a, const cv::Point &b) {
+    //    return sqrt(pow(a.x - b.x, 2) + pow(a.y - b.y, 2));
+    //}
+
+    double dot(const Point &a, const Point &b) {
+        return (a.x * b.x) + (a.y * b.y);
+    }
+
+    double absolute(const Point &a) {
+        return sqrt(pow(a.x, 2) + pow(a.y, 2));
+    }
+
+    double scalar_proj() {
+        return dot(p2, p1) / absolute(p1);
     }
 
     std::array<double, NUM_SERVOS> calcError(const cv::Point &set_point, const cv::Point &ball_pos) {
         std::array<double, NUM_SERVOS> error;
 
         for (uint8_t i = 0; i < servos.size(); ++i) {
-            error[i] = pythagoras(servos[i]->get_position(), set_point) - pythagoras(servos[i]->get_position(), ball_pos);
+            // error[i] = get_length_diff(servos[i]->get_position(), set_point) - get_length_diff(servos[i]->get_position(),
+            // ball_pos); error[i] *= -1; error[i] = absolute()
         }
 
         return error;

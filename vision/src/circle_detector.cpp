@@ -70,7 +70,7 @@ std::array<cv::Point, 3> Circle_detector::init(const cv::Size &blur_size, const 
         }
     }
 
-    return {cv::Point(0, 0)};
+    return {cv::Point(-1, -1)};
 }
 
 void Circle_detector::detect_circles(const cv::Size &blur_size, const int &min_radius, const int &max_radius) {
