@@ -6,14 +6,58 @@
 #include "servo.hpp"
 #include <stdio.h>
 
+bool triangle_check(const cv::Point &red, const cv::Point &blue, const cv::Point &green) {
+    double side_1 = sqrt(pow(red.x - blue.x, 2) + pow(red.y - blue.y, 2));
+    double side_2 = sqrt(pow(red.x - green.x, 2) + pow(red.y - green.y, 2));
+    double side_3 = sqrt(pow(blue.x - green.x, 2) + pow(blue.y - green.y, 2));
+    double side_avg = (side_1 + side_2 + side_3) / 3;
+
+    if ((side_1 - side_avg > -10) && (side_1 - side_avg < 10)) {
+        return true;
+    } else
+        return false;
+}
+
 int main() {
 
     // Circle detection.
     display window("Circles");
-    Circle_detector circles(0, 800, 800);
+    Circle_detector circles(0, 100, 100);
 
-    // Detect motor position.
-    auto servo_positions = circles.init(cv::Size(17, 17), 0, 10);
+    // Get motor position.
+    std::vector<cv::Point> servo_positions;
+
+    while (servo_positions.size() != 3) {
+        std::cout << "Press 'a' for automatic servo localisation.\n"
+                  << "Press 'm' for manual servo loacalisation.\n";
+        char key = cv::waitKey(0);
+        if (key == 'a') {
+            std::cout << "Automatic servo loacalisation.\n"
+                      << "Make sure the servo stickers are visible to the camera.\n";
+            servo_positions = circles.init(cv::Size(17, 17), 0, 10);
+        } else if (key == 'm') {
+            std::cout << "Manual servo localisation.\n"
+                      << "Click with the mouse in the video feed on the locations of the servos.\n";
+            std::cout << "Click the red motor.\n";
+            servo_positions.push_back(window.get_mouse_pos_on_click());
+            std::cout << "Red: " << servo_positions[0] << '\n';
+
+            std::cout << "Click the blue motor.\n";
+            servo_positions.push_back(window.get_mouse_pos_on_click());
+            std::cout << "blue: " << servo_positions[1] << '\n';
+
+            std::cout << "Click the green motor.\n";
+            servo_positions.push_back(window.get_mouse_pos_on_click());
+            std::cout << "green: " << servo_positions[2] << '\n';
+
+            if (triangle_check(servo_positions[0], servo_positions[1], servo_positions[2]))
+                std::cout << "Valid motor positions detected.\n";
+            else {
+                std::cout << "Invalid motor positions detected.\n";
+                return 1;
+            }
+        }
+    }
 
     if (servo_positions[0] == cv::Point(-1, -1)) {
         std::cout << "TERMINATED\n";

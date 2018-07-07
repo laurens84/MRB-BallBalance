@@ -17,18 +17,6 @@ class Coordinator {
     //    return sqrt(pow(a.x - b.x, 2) + pow(a.y - b.y, 2));
     //}
 
-    double dot(const Point &a, const Point &b) {
-        return (a.x * b.x) + (a.y * b.y);
-    }
-
-    double absolute(const Point &a) {
-        return sqrt(pow(a.x, 2) + pow(a.y, 2));
-    }
-
-    double scalar_proj() {
-        return dot(p2, p1) / absolute(p1);
-    }
-
     std::array<double, NUM_SERVOS> calcError(const cv::Point &set_point, const cv::Point &ball_pos) {
         std::array<double, NUM_SERVOS> error;
 

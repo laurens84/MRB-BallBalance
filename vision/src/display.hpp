@@ -18,6 +18,7 @@ class display {
     void display_circles(cv::Mat &frame, std::vector<cv::Point> &points) const;
 
     cv::Point &get_mouse_pos();
+    cv::Point &get_mouse_pos_on_click();
     void set_mouse_pos(const cv::Point &mouse_pos);
 };
 #endif // DISPLAY_HPP

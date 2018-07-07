@@ -5,7 +5,7 @@ void display::mouse_handler(int evt, int x, int y, int flags, void *param) {
         cv::Point *ptr = (cv::Point *)param;
         ptr->x = x;
         ptr->y = y;
-        std::cout << *ptr << '\n';
+        // std::cout << *ptr << '\n';
     }
 }
 
@@ -24,6 +24,14 @@ void display::display_circles(cv::Mat &frame, std::vector<cv::Point> &points) co
 }
 
 cv::Point &display::get_mouse_pos() {
+    return set_point;
+}
+
+cv::Point &display::get_mouse_pos_on_click() {
+    cv::Point temp = set_point;
+    while (temp == set_point) {
+        cv::waitKey(100);
+    }
     return set_point;
 }
 

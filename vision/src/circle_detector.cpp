@@ -13,7 +13,7 @@ Circle_detector::Circle_detector(const uint8_t &deviceNum, const uint16_t &width
     }
 }
 
-std::array<cv::Point, 3> Circle_detector::init(const cv::Size &blur_size, const int &min_radius, const int &max_radius) {
+std::vector<cv::Point> Circle_detector::init(const cv::Size &blur_size, const int &min_radius, const int &max_radius) {
     while (!triangle_detected) {
         cv::Point red(0, 0), blue(0, 0), green(0, 0);
 

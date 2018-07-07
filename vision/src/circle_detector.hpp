@@ -20,7 +20,7 @@ class Circle_detector {
   public:
     Circle_detector(const uint8_t &deviceNum, const uint16_t &width, const uint16_t &height);
 
-    std::array<cv::Point, 3> init(const cv::Size &blur_size, const int &min_radius, const int &max_radius);
+    std::vector<cv::Point> init(const cv::Size &blur_size, const int &min_radius, const int &max_radius);
 
     void detect_circles(const cv::Size &blur_size, const int &min_radius, const int &max_radius);
 
