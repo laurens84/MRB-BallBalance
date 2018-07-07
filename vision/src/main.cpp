@@ -54,7 +54,7 @@ int main() {
                 std::cout << "Valid motor positions detected.\n";
             else {
                 std::cout << "Invalid motor positions detected.\n";
-                return 1;
+                servo_positions.clear();
             }
         }
     }
