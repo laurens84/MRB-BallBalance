@@ -38,3 +38,7 @@ int UART::send(const char *write_buffer) {
     // std::cout << write_buffer << '\n';
     return write(fd, write_buffer, sizeof(write_buffer));
 }
+
+UART::~UART() {
+    close(fd);
+}

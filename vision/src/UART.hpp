@@ -25,6 +25,8 @@ class UART {
     void receive();
 
     int send(const char *write_buffer);
+
+    ~UART();
 };
 
 #endif
