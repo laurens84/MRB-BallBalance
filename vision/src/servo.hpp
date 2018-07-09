@@ -7,13 +7,13 @@
 class Servo {
   private:
     UART &serial;
-    uint8_t id, motpos;
+    uint8_t id, angle;
     cv::Point position;
 
   public:
     Servo(UART &serial, const uint8_t &id, const cv::Point &position);
 
-    void write(uint8_t degees);
+    void write(const uint8_t &degees);
 
     void int_to_str(uint8_t num, char *buffer);
 

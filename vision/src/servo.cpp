@@ -3,8 +3,8 @@
 Servo::Servo(UART &serial, const uint8_t &id, const cv::Point &position) : serial{serial}, id{id}, position{position} {
 }
 
-void Servo::write(uint8_t degrees) {
-    motpos = degrees;
+void Servo::write(const uint8_t &degrees) {
+    angle = degrees;
 
     char data[5];
     data[0] = id;
@@ -23,7 +23,7 @@ void Servo::int_to_str(uint8_t num, char *buffer) {
 }
 
 uint8_t &Servo::get_motor_position() {
-    return motpos;
+    return angle;
 }
 
 cv::Point &Servo::get_position() {

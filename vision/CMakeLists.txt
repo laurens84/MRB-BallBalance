@@ -14,12 +14,13 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 set(sources
-    src/circle_detector.cpp
     src/UART.cpp
-    src/servo.cpp
-    src/display.cpp
+    src/mrb.cpp
+    src/circle_detector.cpp
     src/pid.cpp
-    src/main.cpp)
+    src/servo.cpp
+    src/main.cpp
+)
 
 add_executable(${exe_name} ${sources})
 target_link_libraries(vision ${OpenCV_LIBS})

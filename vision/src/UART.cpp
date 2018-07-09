@@ -8,11 +8,12 @@ UART::UART(const std::string &device) : device{device} {
     tcsetattr(fd, TCSANOW, &serial_port_settings); // Set all atrributes.
 }
 
-int UART::connect() {
+bool UART::connect() {
     fd = open(device.c_str(), O_RDWR | O_NOCTTY);
+    sleep(3);
     if (fd == -1) {
         std::cout << "UART connection failed.\n";
-        return -1; // Connect failed.
+        return 0; // Connect failed.
     }
 
     else {
@@ -23,15 +24,6 @@ int UART::connect() {
 
 void UART::disconnect() {
     close(fd);
-}
-
-void UART::receive() {
-    tcflush(fd, TCIFLUSH);
-    int bytes_read = 0;
-    bytes_read = read(fd, &read_buffer, 32);
-
-    for (int i = 0; i < bytes_read; i++)
-        printf("%c", read_buffer[i]);
 }
 
 int UART::send(const char *write_buffer) {

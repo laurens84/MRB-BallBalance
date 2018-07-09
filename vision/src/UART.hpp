@@ -18,11 +18,9 @@ class UART {
   public:
     UART(const std::string &device);
 
-    int connect();
+    bool connect();
 
     void disconnect();
-
-    void receive();
 
     int send(const char *write_buffer);
 

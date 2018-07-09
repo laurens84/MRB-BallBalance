@@ -1,24 +1,24 @@
 #ifndef CIRCLE_DETECTOR_HPP
 #define CIRCLE_DETECTOR_HPP
 
-#include "opencv2/highgui/highgui.hpp"
-#include "opencv2/imgproc/imgproc.hpp"
+#include <math.h>
+#include <stdio.h>
+#include <unistd.h>
+#include "mrb_math.hpp"
 #include <iostream>
+
+class MRB_controller;
 
 class Circle_detector {
   private:
-    cv::VideoCapture cap;
-    cv::Mat frame, gray;
-    std::vector<cv::Vec3f> circles;
+    MRB_controller * MRB_ctrl;
+    cv::Mat gray, mask;
 
+    std::vector<cv::Vec3f> circles;
     std::vector<cv::Point> points;
 
-    cv::Mat mask;
-
-    bool triangle_detected;
-
   public:
-    Circle_detector(const uint8_t &deviceNum, const uint16_t &width, const uint16_t &height);
+    Circle_detector(MRB_controller *MRB_ctrl);
 
     std::vector<cv::Point> init(const cv::Size &blur_size, const int &min_radius, const int &max_radius);
 
@@ -28,6 +28,6 @@ class Circle_detector {
 
     std::vector<cv::Vec3f> &get_circles();
     std::vector<cv::Point> &get_circle_points();
-    cv::Mat &get_frame();
 };
+
 #endif // CIRCLE_DETECTOR_HPP

@@ -1,24 +1,16 @@
 #include "circle_detector.hpp"
-#include <math.h>
-#include <stdio.h>
-#include <unistd.h>
+#include "mrb.hpp"
 
-Circle_detector::Circle_detector(const uint8_t &deviceNum, const uint16_t &width, const uint16_t &height)
-    : cap{deviceNum}, triangle_detected{false} {
-    if (cap.isOpened()) {
-        cap.set(cv::CAP_PROP_FRAME_WIDTH, width);
-        cap.set(cv::CAP_PROP_FRAME_HEIGHT, height);
-    } else {
-        std::cout << "No input device.\n";
-    }
-}
+Circle_detector::Circle_detector(MRB_controller *MRB_ctrl): 
+    MRB_ctrl{MRB_ctrl}
+{}
 
 std::vector<cv::Point> Circle_detector::init(const cv::Size &blur_size, const int &min_radius, const int &max_radius) {
-    while (!triangle_detected) {
+    while (!MRB_ctrl->get_triangle_detected()) {
         cv::Point red(0, 0), blue(0, 0), green(0, 0);
 
-        cap >> frame;
-        imshow("Circles", frame);
+        MRB_ctrl->renew_frame();
+    	cv::Mat frame = MRB_ctrl->get_frame();
 
         cv::Mat3b bgr_inv = ~frame;
         cv::Mat3b hsv_inv;
@@ -52,17 +44,10 @@ std::vector<cv::Point> Circle_detector::init(const cv::Size &blur_size, const in
         std::cout << "Green: " << green << '\n';
 
         if ((red.x != 0 && red.y != 0) && (blue.x != 0 && blue.y != 0) && (green.x != 0 && green.y != 0)) {
-            double side_1 = sqrt(pow(red.x - blue.x, 2) + pow(red.y - blue.y, 2));
-            double side_2 = sqrt(pow(red.x - green.x, 2) + pow(red.y - green.y, 2));
-            double side_3 = sqrt(pow(blue.x - green.x, 2) + pow(blue.y - green.y, 2));
-            double side_avg = (side_1 + side_2 + side_3) / 3;
-
-            if ((side_1 - side_avg > -10) && (side_1 - side_avg < 10)) {
-                triangle_detected = true;
-                // std::cout << "red: " << red << "\nblue: " << blue << "\ngreen: " << green << "\n\n";
-                std::cout << "rb: " << side_1 << " rg: " << side_2 << " bg: " << side_3 << "\n";
+            if(MRB_MATH::triangle_check(red, blue, green, 20)){
+                MRB_ctrl->get_triangle_detected() = true;
                 return {red, blue, green};
-            }
+            };
         }
 
         if (cv::waitKey(30) == 'c') {
@@ -75,8 +60,8 @@ std::vector<cv::Point> Circle_detector::init(const cv::Size &blur_size, const in
 
 void Circle_detector::detect_circles(const cv::Size &blur_size, const int &min_radius, const int &max_radius) {
     circles.clear();
-    cap >> frame;
-    cv::cvtColor(frame, gray, cv::COLOR_BGR2GRAY);
+    MRB_ctrl->renew_frame();
+    cv::cvtColor(MRB_ctrl->get_frame(), gray, cv::COLOR_BGR2GRAY);
     cv::GaussianBlur(gray, gray, blur_size, 0);
     cv::HoughCircles(gray, circles, cv::HOUGH_GRADIENT, 1, gray.rows / 8, 100, 20, min_radius, max_radius);
 }
@@ -102,8 +87,4 @@ std::vector<cv::Vec3f> &Circle_detector::get_circles() {
 
 std::vector<cv::Point> &Circle_detector::get_circle_points() {
     return points;
-}
-
-cv::Mat &Circle_detector::get_frame() {
-    return frame;
 }
