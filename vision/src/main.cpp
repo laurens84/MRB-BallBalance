@@ -1,15 +1,15 @@
 #include "UART.hpp"
-#include "mrb_math.hpp"
-#include "mrb.hpp"
 #include "circle_detector.hpp"
 #include "coordinator.hpp"
+#include "mrb.hpp"
+#include "mrb_math.hpp"
 #include "pid.hpp"
 #include "servo.hpp"
 #include <stdio.h>
 
 int main() {
     // MRB controller.
-    MRB_controller mrb("Circles", 0, 400, 400);
+    MRB_controller mrb("Circles", 1, 300, 300);
 
     // Circle detection.
     Circle_detector circles(&mrb);
@@ -17,7 +17,7 @@ int main() {
     // Store the motor positions.
     std::vector<cv::Point> servo_positions;
 
-    if(!mrb.init(circles, servo_positions)){
+    if (!mrb.init(circles, servo_positions)) {
         std::cerr << "INIT TERMINATED\n";
         return 1;
     }
@@ -40,17 +40,21 @@ int main() {
     mrb.set_mouse_pos((1.f / 3.f) * (servo1.get_position() + servo2.get_position() + servo3.get_position()));
 
     // Create PID objects.
-    PID pid1 = PID(1, 120, 70, 0.00001, 1.5, 0.0005);
-    PID pid2 = PID(1, 120, 70, 0.00001, 1.5, 0.0005);
-    PID pid3 = PID(1, 120, 70, 0.00001, 1.5, 0.0005);
+    PID pid1 = PID(1, 110, 57, 0.04, 1.25, 0.0003);
+    PID pid2 = PID(1, 118, 70, 0.04, 1.25, 0.0003);
+    PID pid3 = PID(1, 120, 70, 0.04, 1.25, 0.0003);
 
     while (1) {
-        circles.detect_circles(cv::Size(13, 13), 20, 30);
+        mrb.display_circles(circles.get_circle_points());
+        mrb.display_set_point();
+        imshow(mrb.get_window_name(), mrb.get_frame());
+
+        circles.detect_circles(cv::Size(9, 9), 20, 30);
 
         if (circles.get_circles().size() > 0) {
             circles.locate_circles();
 
-            if(circles.get_circle_points().size() > 0){
+            if (circles.get_circle_points().size() > 0) {
                 std::array<double, 3> errors = cod.calcError(mrb.get_mouse_pos(), circles.get_circle_points()[0]);
 
                 servo1.write((int)pid1.calculate(errors[0]));
@@ -61,8 +65,6 @@ int main() {
                 usleep(10000);
             }
         }
-
-        mrb.display_circles(circles.get_circle_points());
 
         if (cv::waitKey(30) == 'c') {
             break;

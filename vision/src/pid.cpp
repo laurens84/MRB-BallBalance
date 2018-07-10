@@ -3,18 +3,11 @@
 
 #include "pid.hpp"
 
-PID::PID(const double & dt, const double & max, const double & min, const double & Kp, const double & Kd, const double & Ki):
-    _dt{dt}, 
-    _max{max}, 
-    _min{min}, 
-    _Kp{Kp}, 
-    _Kd{Kd}, 
-    _Ki{Ki}, 
-    _pre_error{0}, 
-    _integral{0}
-{}
+PID::PID(const double &dt, const double &max, const double &min, const double &Kp, const double &Kd, const double &Ki)
+    : _dt{dt}, _max{max}, _min{min}, _Kp{Kp}, _Kd{Kd}, _Ki{Ki}, _pre_error{0}, _integral{0} {
+}
 
-double PID::calculate(const double & error) {
+double PID::calculate(const double &error) {
     // Proportional term
     double Pout = _Kp * error;
 
@@ -39,10 +32,12 @@ double PID::calculate(const double & error) {
         output = _min;
 
     _pre_error = error;
-
-    std::cout << "Output: " << output << '\n';
-
     return output;
+}
+
+void PID::reset() {
+    _pre_error = 0;
+    _integral = 0;
 }
 
 #endif // PID_CPP

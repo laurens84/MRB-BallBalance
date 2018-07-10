@@ -1,16 +1,17 @@
 #include "circle_detector.hpp"
 #include "mrb.hpp"
 
-Circle_detector::Circle_detector(MRB_controller *MRB_ctrl): 
-    MRB_ctrl{MRB_ctrl}
-{}
+Circle_detector::Circle_detector(MRB_controller *MRB_ctrl) : MRB_ctrl{MRB_ctrl} {
+}
 
 std::vector<cv::Point> Circle_detector::init(const cv::Size &blur_size, const int &min_radius, const int &max_radius) {
     while (!MRB_ctrl->get_triangle_detected()) {
         cv::Point red(0, 0), blue(0, 0), green(0, 0);
 
         MRB_ctrl->renew_frame();
-    	cv::Mat frame = MRB_ctrl->get_frame();
+        imshow(MRB_ctrl->get_window_name(), MRB_ctrl->get_frame());
+
+        cv::Mat frame = MRB_ctrl->get_frame();
 
         cv::Mat3b bgr_inv = ~frame;
         cv::Mat3b hsv_inv;
@@ -44,7 +45,7 @@ std::vector<cv::Point> Circle_detector::init(const cv::Size &blur_size, const in
         std::cout << "Green: " << green << '\n';
 
         if ((red.x != 0 && red.y != 0) && (blue.x != 0 && blue.y != 0) && (green.x != 0 && green.y != 0)) {
-            if(MRB_MATH::triangle_check(red, blue, green, 20)){
+            if (MRB_MATH::triangle_check(red, blue, green, 20)) {
                 MRB_ctrl->get_triangle_detected() = true;
                 return {red, blue, green};
             };
@@ -62,8 +63,8 @@ void Circle_detector::detect_circles(const cv::Size &blur_size, const int &min_r
     circles.clear();
     MRB_ctrl->renew_frame();
     cv::cvtColor(MRB_ctrl->get_frame(), gray, cv::COLOR_BGR2GRAY);
-    cv::GaussianBlur(gray, gray, blur_size, 0);
-    cv::HoughCircles(gray, circles, cv::HOUGH_GRADIENT, 1, gray.rows / 8, 100, 20, min_radius, max_radius);
+    cv::GaussianBlur(gray, gray, blur_size, 1.5);
+    cv::HoughCircles(gray, circles, cv::HOUGH_GRADIENT, 2, gray.rows / 4, 100, 40, min_radius, max_radius);
 }
 
 const std::vector<cv::Point> &Circle_detector::locate_circles() {

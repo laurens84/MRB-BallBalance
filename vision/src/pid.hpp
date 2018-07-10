@@ -21,11 +21,13 @@ class PID {
     // dt -  loop interval time
     // max - maximum value of manipulated variable
     // min - minimum value of manipulated variable
-    PID(const double & dt, const double & max, const double & min, const double & Kp, const double & Kd, const double & Ki);
+    PID(const double &dt, const double &max, const double &min, const double &Kp, const double &Kd, const double &Ki);
 
     // Returns the manipulated variable given an error value.
     // Double calculate(const double & error);
-    double calculate(const double & error);
+    double calculate(const double &error);
+
+    void reset();
 };
 
 #endif // PID_HPP
