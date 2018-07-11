@@ -3,8 +3,8 @@
 
 #include "pid.hpp"
 
-PID::PID(const double &dt, const double &max, const double &min, const double &Kp, const double &Kd, const double &Ki)
-    : _dt{dt}, _max{max}, _min{min}, _Kp{Kp}, _Kd{Kd}, _Ki{Ki}, _pre_error{0}, _integral{0} {
+PID::PID(const double &dt, const double &max, const double &min, const double &Kp, const double &Ki, const double &Kd)
+    : _dt{dt}, _max{max}, _min{min}, _Kp{Kp}, _Ki{Ki}, _Kd{Kd}, _pre_error{0}, _integral{0} {
 }
 
 double PID::calculate(const double &error) {
@@ -23,7 +23,7 @@ double PID::calculate(const double &error) {
     double output = Pout + Iout + Dout;
 
     output = (-output) + ((_max + _min) / 2);
-
+ 
     // Save error to previous error
     // Restrict to max/min
     if (output > _max)

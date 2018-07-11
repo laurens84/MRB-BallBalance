@@ -9,12 +9,12 @@
 
 int main() {
     // MRB controller.
-    MRB_controller mrb("Circles", 1, 300, 300);
+    MRB_controller mrb("Circles", 0, 300, 300);
 
     // Circle detection.
     Circle_detector circles(&mrb);
 
-    // Store the motor positions.
+    // Storage for the motor positions.
     std::vector<cv::Point> servo_positions;
 
     if (!mrb.init(circles, servo_positions)) {
@@ -37,18 +37,24 @@ int main() {
     std::cout << *cod.get_servo_location('a') << "\n";
 
     // Set the set_point in the center.
-    mrb.set_mouse_pos((1.f / 3.f) * (servo1.get_position() + servo2.get_position() + servo3.get_position()));
+    mrb.new_set_point((1.f / 3.f) * (servo1.get_position() + servo2.get_position() + servo3.get_position()));
+    mrb.display_set_point();
 
     // Create PID objects.
-    PID pid1 = PID(1, 110, 57, 0.04, 1.25, 0.0003);
-    PID pid2 = PID(1, 118, 70, 0.04, 1.25, 0.0003);
-    PID pid3 = PID(1, 120, 70, 0.04, 1.25, 0.0003);
+    double p = 0.175;
+    double i = 0.002;
+    double d = 0.185;
+
+    PID pid1 = PID(0.1, 100, 57, p, i, d);
+    PID pid2 = PID(0.1, 108, 70, p, i, d);
+    PID pid3 = PID(0.1, 110, 70, p, i, d);
+
+    // Set the PID object pointers in mrb to enable properly changing the SP on click.
+    std::vector<PID> PID_vec = {pid1, pid2, pid3};
+    mrb.set_pid_controllers(PID_vec);
 
     while (1) {
-        mrb.display_circles(circles.get_circle_points());
-        mrb.display_set_point();
-        imshow(mrb.get_window_name(), mrb.get_frame());
-
+        mrb.renew_frame();
         circles.detect_circles(cv::Size(9, 9), 20, 30);
 
         if (circles.get_circles().size() > 0) {
@@ -66,7 +72,11 @@ int main() {
             }
         }
 
-        if (cv::waitKey(30) == 'c') {
+        mrb.display_circles(circles.get_circle_points());
+        mrb.display_set_point();
+        imshow(mrb.get_window_name(), mrb.get_frame());
+
+        if (cv::waitKey(30) == 'q') {
             break;
         }
     }

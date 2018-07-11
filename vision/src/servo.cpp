@@ -22,7 +22,7 @@ void Servo::int_to_str(uint8_t num, char *buffer) {
     }
 }
 
-uint8_t &Servo::get_motor_position() {
+uint8_t &Servo::get_motor_angle() {
     return angle;
 }
 

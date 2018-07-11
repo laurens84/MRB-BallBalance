@@ -1,3 +1,9 @@
+/**
+ * @brief The PID file contains the PID class used to manipulate values based on the error.
+ *
+ * @file pid.hpp
+ * @date 2018-07-11
+ */
 #ifndef PID_HPP
 #define PID_HPP
 
@@ -9,24 +15,36 @@ class PID {
     double _max;
     double _min;
     double _Kp;
-    double _Kd;
     double _Ki;
+    double _Kd;
     double _pre_error;
     double _integral;
 
   public:
-    // Kp -  proportional gain
-    // Ki -  Integral gain
-    // Kd -  derivative gain
-    // dt -  loop interval time
-    // max - maximum value of manipulated variable
-    // min - minimum value of manipulated variable
-    PID(const double &dt, const double &max, const double &min, const double &Kp, const double &Kd, const double &Ki);
+    /**
+     * @brief Construct a new PID controller object.
+     *
+     * @param dt  loop interval time.
+     * @param max maximum value of manipulated variable.
+     * @param min minimum value of manipulated variable.
+     * @param Kp  proportional gain.
+     * @param Ki  Integral gain.
+     * @param Kd  derivative gain.
+     */
+    PID(const double &dt, const double &max, const double &min, const double &Kp, const double &Ki, const double &Kd);
 
-    // Returns the manipulated variable given an error value.
-    // Double calculate(const double & error);
+    /**
+     * @brief Manipulates a given error using the pid controller algorithm.
+     *
+     * @param error   The error between the SP and the PV.
+     * @return double The manipulated value.
+     */
     double calculate(const double &error);
 
+    /**
+     * @brief Resets the _pre_error and _integral to avoid problems when a new SP is set.
+     *
+     */
     void reset();
 };
 

@@ -51,7 +51,7 @@ std::vector<cv::Point> Circle_detector::init(const cv::Size &blur_size, const in
             };
         }
 
-        if (cv::waitKey(30) == 'c') {
+        if (cv::waitKey(30) == 'q') {
             break;
         }
     }
@@ -61,9 +61,8 @@ std::vector<cv::Point> Circle_detector::init(const cv::Size &blur_size, const in
 
 void Circle_detector::detect_circles(const cv::Size &blur_size, const int &min_radius, const int &max_radius) {
     circles.clear();
-    MRB_ctrl->renew_frame();
-    cv::cvtColor(MRB_ctrl->get_frame(), gray, cv::COLOR_BGR2GRAY);
-    cv::GaussianBlur(gray, gray, blur_size, 1.5);
+    cv::cvtColor(MRB_ctrl->get_frame(), gray, cv::COLOR_RGB2GRAY);
+    cv::GaussianBlur(gray, gray, blur_size, 1.3);
     cv::HoughCircles(gray, circles, cv::HOUGH_GRADIENT, 2, gray.rows / 4, 100, 40, min_radius, max_radius);
 }
 

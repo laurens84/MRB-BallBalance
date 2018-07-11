@@ -4,7 +4,7 @@ MRB_controller::MRB_controller(const std::string &window_name, const uint8_t &de
                                const uint16_t &height)
     : window_name{window_name}, cap{deviceNum}, triangle_detected{false} {
     cv::namedWindow(window_name, cv::WINDOW_AUTOSIZE);
-    cv::setMouseCallback(window_name, this->mouse_handler, (void *)&set_point);
+    cv::setMouseCallback(window_name, this->mouse_handler, this);
 
     if (cap.isOpened()) {
         cap.set(cv::CAP_PROP_FRAME_WIDTH, width);
@@ -17,10 +17,10 @@ MRB_controller::MRB_controller(const std::string &window_name, const uint8_t &de
 // Private
 void MRB_controller::mouse_handler(int evt, int x, int y, int flags, void *param) {
     if (evt == cv::EVENT_LBUTTONDOWN) {
-        cv::Point *ptr = (cv::Point *)param;
-        ptr->x = x;
-        ptr->y = y;
-        // std::cout << *ptr << '\n';
+        MRB_controller *mrb = static_cast<MRB_controller *>(param);
+        if (mrb) {
+            mrb->new_set_point(cv::Point(x, y));
+        }
     }
 }
 
@@ -78,12 +78,25 @@ void MRB_controller::display_circles(std::vector<cv::Point> &points) const {
     }
 }
 
+void MRB_controller::set_pid_controllers(std::vector<PID> &pid_controllers) {
+    for (uint8_t i = 0; i < pid_controllers.size(); ++i) {
+        PID_ctrls.push_back(&pid_controllers[i]);
+    }
+}
+
 void MRB_controller::display_set_point() {
     cv::circle(frame, set_point, 3, cv::Scalar(255, 255, 0), -1, 8, 0);
 }
 
-void MRB_controller::set_mouse_pos(const cv::Point &mouse_pos) {
-    set_point = mouse_pos;
+void MRB_controller::new_set_point(const cv::Point &new_pos) {
+    std::cout << "New set_point & reset PID.\n";
+
+    set_point = new_pos;
+    for (auto &v : PID_ctrls) {
+        if (v != nullptr) {
+            v->reset();
+        }
+    }
 }
 
 void MRB_controller::renew_frame() {
