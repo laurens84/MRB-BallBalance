@@ -89,8 +89,6 @@ void MRB_controller::display_set_point() {
 }
 
 void MRB_controller::new_set_point(const cv::Point &new_pos) {
-    std::cout << "New set_point & reset PID.\n";
-
     set_point = new_pos;
     for (auto &v : PID_ctrls) {
         if (v != nullptr) {

@@ -41,9 +41,9 @@ int main() {
     mrb.display_set_point();
 
     // Create PID objects.
-    double p = 0.175;
-    double i = 0.002;
-    double d = 0.185;
+    double p = 0.09;
+    double i = 0.0;
+    double d = 0.9;
 
     PID pid1 = PID(0.1, 100, 57, p, i, d);
     PID pid2 = PID(0.1, 108, 70, p, i, d);
