@@ -13,6 +13,8 @@
 
 namespace MRB_MATH {
 
+const double pi = 3.14159265358979323846;
+
 /**
  * @brief Returns the absolute value of a number if applicable.
  *
@@ -36,24 +38,34 @@ inline double dot(const cv::Point &a, const cv::Point &b) {
 }
 
 /**
- * @brief Returns the absolute value of a vector.
+ * @brief Returns the magnitude of a vector.
  *
  * @param a         The vector.
- * @return double   Returns the absolute value of vector a.
+ * @return double   Returns the magnitude of vector a.
  */
-inline double absolute(const cv::Point &a) {
+inline double magnitude(const cv::Point &a) {
     return sqrt(pow(abs<int>(a.x), 2) + pow(abs<int>(a.y), 2));
 }
 
 /**
- * @brief Returns the absolute value of vector a - b.
+ * @brief Returns the magnitude of vector a - b.
  *
  * @param a         The vector that will be substracted from.
  * @param b         The substraction vector.
- * @return double   Returns the absolute value of vector a - b.
+ * @return double   Returns the magnitude of vector a - b.
  */
-inline double absolute_sub(const cv::Point &a, const cv::Point &b) {
+inline double magnitude_sub(const cv::Point &a, const cv::Point &b) {
     return sqrt(pow(abs<int>(a.x - b.x), 2) + pow(abs<int>(a.y - b.y), 2));
+}
+
+/**
+ * @brief Returns the unit vector of a given vector.
+ *
+ * @param a             The vector.
+ * @return cv::Point    The unit vector.
+ */
+inline const cv::Point unit_vector(const cv::Point &a) {
+    return (magnitude(a) > 0.0001f) ? a / magnitude(a) : cv::Point(1, 0);
 }
 
 /**
@@ -69,23 +81,12 @@ inline double absolute_sub(const cv::Point &a, const cv::Point &b) {
 inline bool triangle_check(const cv::Point &a, const cv::Point &b, const cv::Point &c, uint16_t leeway) {
     leeway -= (leeway % 2); // Substract 1 if odd number.
 
-    double side_1 = absolute_sub(a, b);
-    double side_2 = absolute_sub(a, c);
-    double side_3 = absolute_sub(b, c);
+    double side_1 = magnitude_sub(a, b);
+    double side_2 = magnitude_sub(a, c);
+    double side_3 = magnitude_sub(b, c);
     double side_avg = (side_1 + side_2 + side_3) / 3;
 
     return ((side_1 - side_avg > -leeway / 2) && (side_1 - side_avg < leeway / 2)) ? true : false;
-}
-
-/**
- * @brief Returns the scalar projection of two vectors.
- *
- * @param a         The first vector.
- * @param b         The second vector, projected on a.
- * @return double   Returns the scalar projection of vector b on a.
- */
-inline double scalar_proj(const cv::Point &a, const cv::Point &b) {
-    return dot(a, b) / absolute(a);
 }
 
 } // namespace MRB_MATH

@@ -34,15 +34,12 @@ class Coordinator {
      * @param ball_pos                          The position of the ball.
      * @return std::array<double, NUM_SERVOS>   Returns an array with error values for each servo.
      */
-    std::array<double, NUM_SERVOS> calcError(const cv::Point &set_point, const cv::Point &ball_pos) {
+    std::array<double, NUM_SERVOS> calcError(const cv::Point &set_point, const cv::Point &ball_pos, const cv::Point &center) {
         std::array<double, NUM_SERVOS> error;
 
         for (uint8_t i = 0; i < servos.size(); ++i) {
-            error[i] = MRB_MATH::absolute(servos[i]->get_position() - set_point) -
-                       MRB_MATH::scalar_proj(servos[i]->get_position() - set_point, servos[i]->get_position() - ball_pos);
+            error[i] = MRB_MATH::dot(MRB_MATH::unit_vector(servos[i]->get_position() - center), (set_point - ball_pos));
         }
-
-        //std::cout << '[' << error[0] << ", " << error[1] << ", " << error[2] << "]\n";
 
         return error;
     }

@@ -37,17 +37,18 @@ int main() {
     std::cout << *cod.get_servo_location('a') << "\n";
 
     // Set the set_point in the center.
-    mrb.new_set_point((1.f / 3.f) * (servo1.get_position() + servo2.get_position() + servo3.get_position()));
+    cv::Point center((1.f / 3.f) * (servo1.get_position() + servo2.get_position() + servo3.get_position()));
+    mrb.new_set_point(center);
     mrb.display_set_point();
 
     // Create PID objects.
-    double p = 0.09;
-    double i = 0.0;
-    double d = 0.9;
+    double p = 6;
+    double i = 3;
+    double d = 8;
 
-    PID pid1 = PID(0.1, 100, 57, p, i, d);
-    PID pid2 = PID(0.1, 108, 70, p, i, d);
-    PID pid3 = PID(0.1, 110, 70, p, i, d);
+    PID pid1 = PID(0.1, 100, 77, p, i, d);
+    PID pid2 = PID(0.1, 108, 90, p, i, d);
+    PID pid3 = PID(0.1, 110, 90, p, i, d);
 
     // Set the PID object pointers in mrb to enable properly changing the SP on click.
     std::vector<PID> PID_vec = {pid1, pid2, pid3};
@@ -55,13 +56,13 @@ int main() {
 
     while (1) {
         mrb.renew_frame();
-        circles.detect_circles(cv::Size(9, 9), 20, 30);
+        circles.detect_circles(cv::Size(9, 9), 10, 25);
 
         if (circles.get_circles().size() > 0) {
             circles.locate_circles();
 
             if (circles.get_circle_points().size() > 0) {
-                std::array<double, 3> errors = cod.calcError(mrb.get_mouse_pos(), circles.get_circle_points()[0]);
+                std::array<double, 3> errors = cod.calcError(mrb.get_mouse_pos(), circles.get_circle_points()[0], center);
 
                 servo1.write((int)pid1.calculate(errors[0]));
                 usleep(10000);

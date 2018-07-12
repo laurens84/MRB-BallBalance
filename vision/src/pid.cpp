@@ -1,6 +1,3 @@
-#ifndef PID_CPP
-#define PID_CPP
-
 #include "pid.hpp"
 
 PID::PID(const double &dt, const double &max, const double &min, const double &Kp, const double &Ki, const double &Kd)
@@ -20,9 +17,7 @@ double PID::calculate(const double &error) {
     double Dout = _Kd * derivative;
 
     // Calculate total output
-    double output = Pout + Iout + Dout;
-
-    output = (-output) + ((_max + _min) / 2);
+    double output = Pout + Iout + Dout + ((_max + _min) * 0.5f);
  
     // Save error to previous error
     // Restrict to max/min
@@ -39,5 +34,3 @@ void PID::reset() {
     _pre_error = 0;
     _integral = 0;
 }
-
-#endif // PID_CPP
